@@ -55,13 +55,21 @@ lines included, so S = 1 for the triangle V1.1 and 1/2 for the bubble S1.1. Lett
 legs move multiplies |Aut| by exactly |stab|. Both counts were checked against an
 independent networkx count on all 35208 structures.
 
-**|stab| and orbit** describe how a vertex structure's tensor behaves under permuting its
+**|stab| and orbit** describe how a structure's tensor behaves under permuting its
 external indices. |stab| is the number of permutations of i j k that leave the tensor
 unchanged, which are exactly the leg permutations realised by an automorphism of the graph;
 orbit = 6/|stab| is the number of distinct tensors the permutations produce. β and
 Z<sub>λ</sub> both multiply the sum of those orbit terms, so β<sub>L</sub> = L times the 1/ε
 residue of Z<sub>λ</sub>. The triangle V1.1 has |stab| = 6 and orbit = 1; V2.1 has
 |stab| = 2, orbit = 3 and Z<sub>λ</sub> = 7/(144ε) − 1/(12ε²), giving β = 2 · 7/144 = 7/72.
+
+Propagators follow the same rule: exchanging i and j either leaves the tensor unchanged
+(|stab| = 2, orbit = 1, a symmetric graph) or not (|stab| = 1, orbit = 2), and
+Z<sub>φ</sub><sup>−½</sup> − 1 and γ<sub>φ</sub> multiply the sum of the orbit terms, so an
+asymmetric graph's γ<sub>φ</sub> is the coefficient of G<sup>ij</sup> + G<sup>ji</sup>, and
+γ<sub>φ</sub> = −L times the 1/ε residue of Z<sub>φ</sub><sup>−½</sup>. With every coefficient
+normalised this way, each pure wave-function renormalisation — a tree-level vertex with
+one self-energy S on one leg — has β equal to γ<sub>φ</sub> of S, for all 5595 of them.
 
 Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
 whether its graph is unchanged under exchanging the two external legs. Under **γ only** a
@@ -117,7 +125,7 @@ It holds all loop orders in one document:
 | `loops`, `counts` | 1…6, and the structure counts per loop order |
 | `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `aut`, `prim`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `sym`, `comp` |
 | `beta`, `beta_z`, `Z_lambda` | vertex-structure expressions, keyed by structure id |
-| `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id |
+| `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id (`gamma_phi_On`: both orientations at O(n)) |
 
 Expressions are sympy-readable strings in `n` and `epsilon`; `id` is unique across loop
 orders and is the registry number the atlas displays. Two reducibility flags travel with each structure:
