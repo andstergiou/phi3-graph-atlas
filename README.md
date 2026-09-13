@@ -35,6 +35,14 @@ vertex structures, so every vertex structure the filter removes is leg-dressed; 
 16456, the 5595 pure wave-function renormalisations survive — precisely the dressed
 structures with β ≠ 0.
 
+Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
+whether its graph is unchanged under exchanging the two external legs. Under **γ only** a
+second control appears — all · symmetric · asymmetric — opening on all each time γ only is
+chosen. Of the 4229 propagator structures 818 are symmetric and 3411 asymmetric; asymmetric
+ones first appear at three loops (3 of 12), and at six loops they outnumber the symmetric
+3076 to 636. The registry is unoriented, so an asymmetric graph appears once and stands for
+both orientations.
+
 Every expression in the details pane can be copied as LaTeX: hover it and a **TeX**
 button appears, putting the formula on the clipboard in standard syntax
 (`\frac`, `\varepsilon`, `\zeta_{5,3}`, `\lambda_{ikab}`, `f^{(6)}_{2,9}`), ready to
@@ -80,7 +88,7 @@ one document:
 | --- | --- |
 | `note`, `source` | conventions, provenance, licence |
 | `loops`, `counts` | 1…6, and the structure counts per loop order |
-| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `comp` |
+| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `sym`, `comp` |
 | `beta`, `beta_z`, `Z_lambda` | vertex-structure expressions, keyed by structure id |
 | `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id |
 
@@ -88,7 +96,8 @@ Expressions are sympy-readable strings in `n` and `epsilon`; `id` is unique acro
 orders and is the registry number the atlas displays. Two reducibility flags travel with each structure:
 `vr` is the raw topology (the internal graph has a cut vertex), and `fac` is what the
 "non-factorisable only" filter hides, so the same cut can be made on the data:
-`[s for s in d['structures'] if not s['fac']]`. The file is written compact rather than
+`[s for s in d['structures'] if not s['fac']]`. Propagator structures
+also carry `sym`, true when the graph is symmetric under exchanging its two external legs. The file is written compact rather than
 indented — at this size indenting would add 22 MB — but it parses identically.
 
 Every expression agrees with the project's `renorm3_L1…L6.json`: 30979 `beta`, 30979
