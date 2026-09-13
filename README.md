@@ -41,9 +41,9 @@ structures with β ≠ 0.
 counterterm is a single 1/ε pole. There are 662 — 661 vertex structures (1, 1, 2, 9, 62,
 586 at L = 1…6) and the one-loop bubble S1.1. For a propagator, a subgraph whose contraction
 leaves a scaleless graph does not count; every propagator structure from two loops on has a
-subdivergence that does count. The flag was checked against Schnetz's `PeriodsPhi3`. The
-661 are exactly the vertex graphs obtained by deleting a vertex of a completed primitive
-there (L ≤ 6), each with β = (−1)<sup>L+1</sup>·S·P. Every primitive has a single-pole
+subdivergence that does count. The flag was checked against Schnetz's table of φ³ periods (the
+file `PeriodsPhi3` in HyperlogProcedures). The 661 are exactly the vertex graphs obtained by
+deleting a vertex of a completed primitive graph listed there (L ≤ 6), each with β = (−1)<sup>L+1</sup>·S·P. Every primitive has a single-pole
 counterterm, and among the 1PI structures nothing else does. The one structure with a
 single pole that is not primitive is D1.2, the tree vertex with the bubble on one leg: it
 is not 1PI, and its only divergence is the primitive self-energy it carries
@@ -111,8 +111,7 @@ served next to the page, so it can be fetched directly:
 curl -O https://andstergiou.github.io/phi3-graph-atlas/phi3_atlas.json
 ```
 
-It follows the shape of the project's `renorm3_L*.json` files, with all loop orders in
-one document:
+It holds all loop orders in one document:
 
 | key | contents |
 | --- | --- |
@@ -130,10 +129,6 @@ orders and is the registry number the atlas displays. Two reducibility flags tra
 also carry `sym`, true when the graph is symmetric under exchanging its two external legs. Every structure carries `aut`,
 the |Aut| above (its symmetry factor is `1/aut`), and `prim`, the primitive flag. The file is written compact rather than
 indented — at this size indenting would add 22 MB — but it parses identically.
-
-Every expression agrees with the project's `renorm3_L1…L6.json`: 30979 `beta`, 30979
-`Z_lambda` and 4229 `gamma_phi`, plus all 35208 edge lists and O(n) values, checked
-term for term.
 
 ```python
 import json, sympy
@@ -190,13 +185,7 @@ beside them are this project's own computation.
 
 ## How the page is built
 
-The atlas is generated in the research repository, then copied here:
-
-```
-python schnetz/extracted/graph_viewer.py 6 --phi3   # -> schnetz/extracted_results/graph_atlas3.html
-python build.py                                     # -> index.html + phi3_atlas.json
-```
-
+The atlas page is generated from the results of the computation;
 [`build.py`](build.py) is the whole of the difference between the generated file and
 what is served: it adds a doctype and a UTF-8 charset, one header line giving the
 provenance, a download link, and it writes the JSON export out of the page's own
