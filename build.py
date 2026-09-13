@@ -48,7 +48,8 @@ TABS = '<div class="tabs" id="tabs" role="tablist"></div>'
 FOUR_POINT = {'beta': 'beta', 'beta_z': 'beta_z', 'Z': 'Z_lambda'}
 TWO_POINT = {'u': 'Zphi_minus_half', 'gamma': 'gamma_phi', 'gammaOn': 'gamma_phi_On'}
 META = ('id', 'L', 'kind', 'num', 'seq', 'edges', 'ext', 'stab',
-        'orbit', 'On', 'tensor', 'graph', 'onepi', 'vr', 'fac', 'sym', 'comp')
+        'orbit', 'aut', 'prim', 'On', 'tensor', 'graph', 'onepi', 'vr', 'fac', 'sym',
+        'comp')
 
 NOTE = (
     'Tensorial MS renormalisation of the multiscalar phi^3 beta function and '
@@ -61,8 +62,9 @@ NOTE = (
     'f_3_3_5, ...; f6_... level-6 letters), sqrt(3) and I as in the data; beta_z '
     'is beta in the zeta notation: z3z5 = zeta(5,3), z3z7 = zeta(7,3), '
     'z533 = zeta(5,3,3), P711 = Period[7,11].  Expressions are sympy-readable '
-    'strings in n (the number of scalars) and epsilon.  Four-point structures '
-    'carry beta, beta_z and Z_lambda; two-point structures carry '
+    'strings in n (the number of scalars) and epsilon.  Vertex (three-point) '
+    'structures, kind "4" in the data, carry beta, beta_z and Z_lambda; '
+    'two-point structures carry '
     'Zphi_minus_half, gamma_phi and gamma_phi_On.  The maps are keyed by the '
     'structure id, which is unique across all loop orders and matches the '
     'registry number shown in the atlas.  Two reducibility flags: vr is the raw '
@@ -77,7 +79,13 @@ NOTE = (
     'beta.  Propagator structures also carry sym: whether the graph is '
     'symmetric under exchanging its two external legs.  The registry is '
     'unoriented, so an asymmetric graph appears once and stands for both '
-    'orientations.')
+    'orientations.  Every structure carries aut, the order of its automorphism '
+    'group with the external legs held fixed and parallel lines included '
+    '(the symmetry factor is 1/aut), and prim, true for a primitive graph: '
+    '1PI with no UV subdivergence, so its counterterm is a single 1/epsilon '
+    'pole.  For a propagator a subgraph whose contraction leaves a scaleless '
+    'graph does not count, so the lowest-order propagator structure is '
+    'primitive and no other is.')
 
 
 def extract_data(html):

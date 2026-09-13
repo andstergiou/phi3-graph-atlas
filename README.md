@@ -18,7 +18,8 @@ and comes with
   (V = 1PI vertex structures, D = leg-dressed, S = propagator structures),
 - the tensor contraction and the O(n) value,
 - the β and counterterm (Z) coefficients, and γ where it contributes,
-- the stabiliser and orbit size of the graph's symmetry,
+- the symmetry factor S = 1/|Aut|, and the stabiliser and orbit size of the graph's symmetry,
+- whether the graph is primitive,
 - a TikZ export of the drawing exactly as it appears on screen.
 
 **Non-factorisable only** hides the structures whose tensor really splits into lower
@@ -34,6 +35,24 @@ exception in either direction. The cubic theory has no undressed one-vertex-redu
 vertex structures, so every vertex structure the filter removes is leg-dressed; of the
 16456, the 5595 pure wave-function renormalisations survive — precisely the dressed
 structures with β ≠ 0.
+
+**Primitive only** keeps the primitive graphs: 1PI with no UV subdivergence, so the
+counterterm is a single 1/ε pole. There are 662 — 661 vertex structures (1, 1, 2, 9, 62,
+586 at L = 1…6) and the one-loop bubble S1.1. For a propagator, a subgraph whose contraction
+leaves a scaleless graph does not count; every propagator structure from two loops on has a
+subdivergence that does count. The flag was checked against Schnetz's `PeriodsPhi3`. The
+661 are exactly the vertex graphs obtained by deleting a vertex of a completed primitive
+there (L ≤ 6), each with β = (−1)<sup>L+1</sup>·S·P. Every primitive has a single-pole
+counterterm, and among the 1PI structures nothing else does. The one structure with a
+single pole that is not primitive is D1.2, the tree vertex with the bubble on one leg: it
+is not 1PI, and its only divergence is the primitive self-energy it carries
+(Z<sub>λ</sub> = −1/(4ε), β = −1/12 = γ<sub>φ</sub> of S1.1).
+
+Every structure shows its **symmetry factor** S = 1/|Aut|, on its list row and in the
+details pane. Automorphisms are counted with the external legs held fixed and parallel
+lines included, so S = 1 for the triangle V1.1 and 1/2 for the bubble S1.1. Letting the
+legs move multiplies |Aut| by exactly |stab|. Both counts were checked against an
+independent networkx count on all 35208 structures.
 
 Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
 whether its graph is unchanged under exchanging the two external legs. Under **γ only** a
@@ -51,7 +70,7 @@ paste into a paper.
 On a phone the page becomes a single scrolling column — the list, then the graph, then its
 details — with the conventions and sources behind a toggle. Tapping a structure brings its
 graph into view, and the TeX buttons stay visible since there is no hover. This atlas is the
-heavier of the two, a 3.9 MB download that holds about 80 MB in memory once loaded.
+heavier of the two, a 4.2 MB download that holds about 80 MB in memory once loaded.
 
 The graph drawings are editable: drag a vertex to place it (it stays pinned), drag a
 handle to curve a line, and the layout you arrive at is kept in the browser per
@@ -74,7 +93,7 @@ structures and all 2 + 9 propagator structures.
 
 ## The data
 
-The whole set is in [`phi3_atlas.json`](phi3_atlas.json) — 35.5 MB, 3.7 MB gzipped —
+The whole set is in [`phi3_atlas.json`](phi3_atlas.json) — 36.6 MB, 3.9 MB gzipped —
 served next to the page, so it can be fetched directly:
 
 ```
@@ -88,7 +107,7 @@ one document:
 | --- | --- |
 | `note`, `source` | conventions, provenance, licence |
 | `loops`, `counts` | 1…6, and the structure counts per loop order |
-| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `sym`, `comp` |
+| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `aut`, `prim`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `sym`, `comp` |
 | `beta`, `beta_z`, `Z_lambda` | vertex-structure expressions, keyed by structure id |
 | `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id |
 
@@ -97,7 +116,8 @@ orders and is the registry number the atlas displays. Two reducibility flags tra
 `vr` is the raw topology (the internal graph has a cut vertex), and `fac` is what the
 "non-factorisable only" filter hides, so the same cut can be made on the data:
 `[s for s in d['structures'] if not s['fac']]`. Propagator structures
-also carry `sym`, true when the graph is symmetric under exchanging its two external legs. The file is written compact rather than
+also carry `sym`, true when the graph is symmetric under exchanging its two external legs. Every structure carries `aut`,
+the |Aut| above (its symmetry factor is `1/aut`), and `prim`, the primitive flag. The file is written compact rather than
 indented — at this size indenting would add 22 MB — but it parses identically.
 
 Every expression agrees with the project's `renorm3_L1…L6.json`: 30979 `beta`, 30979
