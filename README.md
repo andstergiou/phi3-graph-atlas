@@ -29,6 +29,10 @@ structures and all 1056 propagator chains, and nothing else. Unlike the quartic 
 there are **no** undressed one-vertex-reducible vertex structures here, so the filter
 amounts to keeping the 1PI structures.
 
+**β only** and **γ only** restrict the list to the structures contributing to the beta
+function or to the anomalous dimension; **all** puts them back. The page opens on the
+one-loop beta structure, V1.1.
+
 The graph drawings are editable: drag a vertex to place it (it stays pinned), drag a
 handle to curve a line, and the layout you arrive at is kept in the browser per
 structure. The filter box takes structure numbers (`V6.12`, `D5.3`, `S2.1`), graph ids
