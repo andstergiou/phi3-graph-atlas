@@ -37,8 +37,8 @@ structures with β ≠ 0.
 
 Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
 whether its graph is unchanged under exchanging the two external legs. Under **γ only** a
-second control appears — all · symmetric · asymmetric — opening on all each time γ only is
-chosen. Of the 4229 propagator structures 818 are symmetric and 3411 asymmetric; asymmetric
+second row branches from it, arrows fanning out to all · symmetric · asymmetric; it opens on
+all each time γ only is chosen. Of the 4229 propagator structures 818 are symmetric and 3411 asymmetric; asymmetric
 ones first appear at three loops (3 of 12), and at six loops they outnumber the symmetric
 3076 to 636. The registry is unoriented, so an asymmetric graph appears once and stands for
 both orientations.
