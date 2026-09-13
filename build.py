@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+r"""Build the published phi^3 atlas: index.html and the JSON export.
+
+The atlas itself is generated in the research repo with
+
+    python schnetz/extracted/graph_viewer.py 6 --phi3   -> graph_atlas3.html
+
+This script turns that file into what the site serves:
+
+  index.html       the generated page, plus a doctype and a UTF-8 charset (the
+                   generator emits neither, so the page is mojibake unless the
+                   server announces UTF-8) and one header line giving the data's
+                   provenance and a link to the export.
+  phi3_atlas.json  the full data set, in the shape of the project's
+                   renorm3_L*.json: a structures list and expressions keyed by
+                   structure id, for every loop order at once.
+
+    python build.py [path/to/research/repo/schnetz/extracted_results]
+"""
+
+import json
+import os
+import re
+import sys
+
+SRC_DEFAULT = os.path.expanduser(
+    '~/Gits/Papers/Gradient Properties of Perturbative Multiscalar RG Flows '
+    'to Six Loops/schnetz/extracted_results')
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = 'https://github.com/andstergiou/phi3-graph-atlas'
+JSON_NAME = 'phi3_atlas.json'
+
+HEAD = ('<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">\n')
+
+CONV_RULE = '.conv{font-size:12px;color:var(--muted);margin:2px 0 8px;max-width:110ch;line-height:1.45}\n'
+
+CSS = (CONV_RULE +
+       '.prov{flex-basis:100%;font-size:12px;color:var(--muted);margin:0 0 6px;max-width:110ch;line-height:1.45}\n'
+       '.prov a{color:var(--accent-ink)}\n'
+       '.dl{font:500 13px var(--sans);padding:5px 11px;border:1px solid var(--line);border-radius:4px;'
+       'background:transparent;color:var(--ink);text-decoration:none;white-space:nowrap}\n'
+       '.dl:hover{border-color:var(--accent);color:var(--accent-ink)}\n')
+
+TABS = '<div class="tabs" id="tabs" role="tablist"></div>'
+
+# Names the renorm_L*.json files use, so the export lines up with them.
+FOUR_POINT = {'beta': 'beta', 'beta_z': 'beta_z', 'Z': 'Z_lambda'}
+TWO_POINT = {'u': 'Zphi_minus_half', 'gamma': 'gamma_phi', 'gammaOn': 'gamma_phi_On'}
+META = ('id', 'L', 'kind', 'num', 'seq', 'edges', 'ext', 'stab',
+        'orbit', 'On', 'tensor', 'graph', 'onepi', 'vr', 'comp')
+
+NOTE = (
+    'Tensorial MS renormalisation of the multiscalar phi^3 beta function and '
+    'anomalous dimension in d = 6 - eps, per structure, at 1 to 6 loops.  Every '
+    'value is in minimal subtraction (MS-bar).  beta is in the '
+    'O-normalisation (structure summed over its distinct external labellings); '
+    'the counterterms are coefficients of Tbar (multiply by stab/6 for O).  '
+    'Transcendentals: Schnetz f-alphabet in Lyndon polynomial normal form '
+    '(f_3 = zeta(3), f_5, ..., f_3_5 = zeta(3)zeta(5) + zeta(5,3)/5, then f_3_7, '
+    'f_3_3_5, ...; f6_... level-6 letters), sqrt(3) and I as in the data; beta_z '
+    'is beta in the zeta notation: z3z5 = zeta(5,3), z3z7 = zeta(7,3), '
+    'z533 = zeta(5,3,3), P711 = Period[7,11].  Expressions are sympy-readable '
+    'strings in n (the number of scalars) and epsilon.  Four-point structures '
+    'carry beta, beta_z and Z_lambda; two-point structures carry '
+    'Zphi_minus_half, gamma_phi and gamma_phi_On.  The maps are keyed by the '
+    'structure id, which is unique across all loop orders and matches the '
+    'registry number shown in the atlas.  vr marks the one-vertex-reducible '
+    'structures: the internal graph has a cut vertex, so the tensor factorises '
+    'through a single vertex.  Every leg-dressed structure and every propagator '
+    'chain is of this kind; the undressed ones all have vanishing beta under '
+    'minimal subtraction.  The atlas can hide them all with its '
+    '"non-factorisable only" filter.')
+
+
+def extract_data(html):
+    m = re.search(r'<script id="data" type="application/json">(.*?)</script>', html, re.S)
+    if not m:
+        raise SystemExit('no inlined data block found; update build.py')
+    return json.loads(m.group(1))
+
+
+def export(data, out):
+    """Write the full set in the shape of renorm_L*.json."""
+    by_loop = {}
+    for e in data:
+        by_loop[e['L']] = by_loop.get(e['L'], 0) + 1
+    doc = {
+        'note': NOTE,
+        'source': {
+            'atlas': 'https://andstergiou.github.io/phi3-graph-atlas/',
+            'repository': REPO,
+            'graph_ordering_and_input_data':
+                "O. Schnetz, HyperlogProcedures 0.8, "
+                "https://github.com/oliverschnetz/HyperlogProcedures",
+            'comparison':
+                'The two- and three-loop MS-bar values agree structure by structure '
+                'with L. Benfatto and O. Zanusso, arXiv:2507.20761, whose convention '
+                'uses i*lambda, a relative (-1)^L.',
+            'extraction':
+                'Structures and coefficients extracted from HyperlogProcedures and '
+                'recomputed by tensorial minimal subtraction with Claude Fable 5.1.  '
+                'All values are in minimal subtraction (MS-bar).',
+            'licence': 'CC BY 4.0',
+        },
+        'loops': sorted(by_loop),
+        'counts': {
+            'structures': len(data),
+            'four_point': sum(1 for e in data if e['kind'] == '4'),
+            'two_point': sum(1 for e in data if e['kind'] == '2'),
+            'by_loop': {str(k): by_loop[k] for k in sorted(by_loop)},
+        },
+        'structures': [{k: e[k] for k in META if k in e} for e in data],
+    }
+    for src, name in list(FOUR_POINT.items()) + list(TWO_POINT.items()):
+        doc[name] = {str(e['id']): e[src] for e in data if src in e}
+    with open(out, 'w') as fh:
+        # compact rather than indented: 35208 structures, and indenting adds 22 MB
+        json.dump(doc, fh, separators=(',', ':'))
+    return doc
+
+
+def credit(n_structures, mb):
+    return (
+        '<div class="prov">Graph ordering and the six-loop input data follow '
+        "O. Schnetz's <a href=\"https://github.com/oliverschnetz/HyperlogProcedures\">"
+        'HyperlogProcedures</a> 0.8; the structures and every coefficient shown here '
+        'were extracted and recomputed by tensorial minimal subtraction (MS-bar) with '
+        f'Claude Fable 5.1. The full set of {n_structures} structures is available as '
+        f'<a href="{JSON_NAME}" download>{JSON_NAME}</a> ({mb:.1f} MB). Provenance, '
+        f'citation and licence (CC BY 4.0): <a href="{REPO}">'
+        'github.com/andstergiou/phi3-graph-atlas</a>.</div>')
+
+
+def main():
+    src = sys.argv[1] if len(sys.argv) > 1 else SRC_DEFAULT
+    path = os.path.join(src, 'graph_atlas3.html')
+    if not os.path.exists(path):
+        raise SystemExit(f'missing {path} — regenerate it with graph_viewer.py 6 --phi3')
+    with open(path) as fh:
+        html = fh.read()
+
+    data = extract_data(html)
+    json_path = os.path.join(HERE, JSON_NAME)
+    export(data, json_path)
+    mb = os.path.getsize(json_path) / 1048576
+    print(f'{JSON_NAME}  ({len(data)} structures, {mb:.1f} MB)')
+
+    if 'class="prov"' in html or 'class="dl"' in html:
+        raise SystemExit('credit block already present')
+    if html.lstrip().startswith('<!doctype'):
+        raise SystemExit('the generated file now has its own doctype; update build.py')
+    if CONV_RULE not in html or TABS not in html:
+        raise SystemExit('the generated markup changed; update build.py')
+
+    i = html.index('<div class="conv">')
+    j = html.index('</div>', i) + len('</div>')
+    html = html[:j] + '\n  ' + credit(len(data), mb) + html[j:]
+    html = html.replace(
+        TABS, TABS + f'\n  <a class="dl" href="{JSON_NAME}" download>Download JSON</a>', 1)
+    html = HEAD + html.replace(CONV_RULE, CSS, 1)
+
+    out = os.path.join(HERE, 'index.html')
+    with open(out, 'w') as fh:
+        fh.write(html)
+    print(f'index.html    ({len(html) / 1048576:.1f} MB)')
+
+
+if __name__ == '__main__':
+    main()
