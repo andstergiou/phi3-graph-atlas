@@ -23,14 +23,17 @@ and comes with
 
 **Non-factorisable only** hides the structures whose tensor really splits into lower
 ones: an undressed structure whose internal graph has a cut vertex, a propagator chain,
-and a leg-dressed structure whose core is factorisable or whose leg carries a chain of
-insertions. A β contribution from wave-function renormalisation is kept as long as the
-self-energy inserted, and the core it dresses, are themselves irreducible. That leaves
-30380 of the 35208 — 3, 9, 47, 313, 2662, 27346 at L = 1…6.
+and every leg-dressed structure except a pure wave-function renormalisation — a
+tree-level vertex with one irreducible self-energy on one leg. A vertex correction
+dressed on a leg, or self-energies on more than one leg, count as products and are
+hidden. That leaves 23291 of the 35208 — 3, 7, 36, 235, 2011, 20999 at L = 1…6.
 
-The cubic theory has no undressed one-vertex-reducible vertex structures at all, and no
-factorisable cores, so what the filter removes here is exactly the 3772 leg-dressed
-structures carrying a chain of insertions on a leg, plus the 1056 propagator chains.
+The cut is purely topological, but it lands on the physics: the vertex structures it
+keeps are exactly the 20118 with non-vanishing β under minimal subtraction, with no
+exception in either direction. The cubic theory has no undressed one-vertex-reducible
+vertex structures, so every vertex structure the filter removes is leg-dressed; of the
+16456, the 5595 pure wave-function renormalisations survive — precisely the dressed
+structures with β ≠ 0.
 
 Every expression in the details pane can be copied as LaTeX: hover it and a **TeX**
 button appears, putting the formula on the clipboard in standard syntax
