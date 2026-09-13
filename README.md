@@ -16,7 +16,7 @@ and comes with
 
 - its number in Schnetz's enumeration
   (V = 1PI vertex structures, D = leg-dressed, S = propagator structures),
-- the tensor contraction and the O(n) value,
+- the tensor contraction and the O(N) value,
 - the β and counterterm (Z) coefficients, and γ where it contributes,
 - the symmetry factor S = 1/|Aut|, and |stab| and orbit, which say how the tensor behaves
   under permuting its external indices,
@@ -71,9 +71,9 @@ asymmetric graph's γ<sub>φ</sub> is the coefficient of G<sup>ij</sup> + G<sup>
 normalised this way, each pure wave-function renormalisation — a tree-level vertex with
 one self-energy S on one leg — has β equal to γ<sub>φ</sub> of S, for all 5595 of them.
 
-The **O(n) value** belongs to a single term of the orbit, like the tensor shown. A structure's
-contribution at O(n) is therefore coefficient × orbit × O(n) value, and summed over the
-structures at a loop order it gives the O(n) β and γ<sub>φ</sub>. `gamma_phi_On` in the export is
+The **O(N) value** belongs to a single term of the orbit, like the tensor shown. A structure's
+contribution at O(N) is therefore coefficient × orbit × O(N) value, and summed over the
+structures at a loop order it gives the O(N) β and γ<sub>φ</sub>. `gamma_phi_On` in the export is
 already this contribution for each propagator structure.
 
 Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
@@ -130,9 +130,9 @@ It holds all loop orders in one document:
 | `loops`, `counts` | 1…6, and the structure counts per loop order |
 | `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `aut`, `prim`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `sym`, `comp` |
 | `beta`, `beta_z`, `Z_lambda` | vertex-structure expressions, keyed by structure id |
-| `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id (`gamma_phi_On`: both orientations at O(n)) |
+| `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id (`gamma_phi_On`: both orientations at O(N)) |
 
-Expressions are sympy-readable strings in `n` and `epsilon`; `id` is unique across loop
+Expressions are sympy-readable strings in `n` (the N of O(N)) and `epsilon`; `id` is unique across loop
 orders and is the registry number the atlas displays. Two reducibility flags travel with each structure:
 `vr` is the raw topology (the internal graph has a cut vertex), and `fac` is what the
 "non-factorisable only" filter hides, so the same cut can be made on the data:
@@ -146,7 +146,7 @@ import json, sympy
 d = json.load(open('phi3_atlas.json'))
 v11 = next(s for s in d['structures'] if s['num'] == 'V1.1')
 print(d['beta'][str(v11['id'])])                  # 1, the one-loop triangle
-print(sympy.sympify(d['gamma_phi_On']['14524']))  # S1.1 at O(n): -n**2*(n - 2)/12
+print(sympy.sympify(d['gamma_phi_On']['14524']))  # S1.1 at O(N), written in n: -n**2*(n - 2)/12
 ```
 
 ## Transcendentals: the f-alphabet
