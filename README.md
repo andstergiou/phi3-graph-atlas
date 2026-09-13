@@ -47,7 +47,7 @@ deleting a vertex of a completed primitive graph listed there (L ≤ 6), each wi
 counterterm, and among the 1PI structures nothing else does. The one structure with a
 single pole that is not primitive is D1.2, the tree vertex with the bubble on one leg: it
 is not 1PI, and its only divergence is the primitive self-energy it carries
-(Z<sub>λ</sub> = −1/(4ε), β = −1/12 = γ<sub>φ</sub> of S1.1).
+(Z<sub>λ</sub> = −1/(12ε), β = −1/12 = γ<sub>φ</sub> of S1.1).
 
 Every structure shows its **symmetry factor** S = 1/|Aut|, on its list row and in the
 details pane. Automorphisms are counted with the external legs held fixed and parallel
@@ -58,12 +58,10 @@ independent networkx count on all 35208 structures.
 **|stab| and orbit** describe how a vertex structure's tensor behaves under permuting its
 external indices. |stab| is the number of permutations of i j k that leave the tensor
 unchanged, which are exactly the leg permutations realised by an automorphism of the graph;
-orbit = 6/|stab| is the number of distinct tensors the permutations produce. β multiplies
-the sum of those orbit terms. Z<sub>λ</sub>
-multiplies the average over all 6 permutations, which is that sum divided by orbit; so
-Z<sub>λ</sub>/orbit is the coefficient of the same sum as β, and β<sub>L</sub> = L times its 1/ε residue.
-The triangle V1.1 has |stab| = 6 and orbit = 1; V2.1 has |stab| = 2 and orbit = 3,
-and its Z<sub>λ</sub> residue 7/48 is 7/144 per orbit term, giving β = 2 · 7/144 = 7/72.
+orbit = 6/|stab| is the number of distinct tensors the permutations produce. β and
+Z<sub>λ</sub> both multiply the sum of those orbit terms, so β<sub>L</sub> = L times the 1/ε
+residue of Z<sub>λ</sub>. The triangle V1.1 has |stab| = 6 and orbit = 1; V2.1 has
+|stab| = 2, orbit = 3 and Z<sub>λ</sub> = 7/(144ε) − 1/(12ε²), giving β = 2 · 7/144 = 7/72.
 
 Every anomalous-dimension structure is marked **symmetric** or **asymmetric**, according to
 whether its graph is unchanged under exchanging the two external legs. Under **γ only** a
