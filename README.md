@@ -21,17 +21,21 @@ and comes with
 - the stabiliser and orbit size of the graph's symmetry,
 - a TikZ export of the drawing exactly as it appears on screen.
 
-**Non-factorisable only** hides the one-vertex-reducible structures: those whose
-internal graph has a cut vertex, so the tensor factorises through a single vertex.
-That leaves 17696 of the 35208 — 2, 5, 26, 171, 1492, 16000 at L = 1…6. In the cubic
-theory the test picks out exactly the reducible sectors: all 16456 leg-dressed
-structures and all 1056 propagator chains, and nothing else. Unlike the quartic case
-there are **no** undressed one-vertex-reducible vertex structures here, so the filter
-amounts to keeping the 1PI structures.
+**Non-factorisable only** hides the structures whose tensor really splits into lower
+ones: an undressed structure whose internal graph has a cut vertex, a propagator chain,
+and a leg-dressed structure whose core is factorisable or whose leg carries a chain of
+insertions. A β contribution from wave-function renormalisation is kept as long as the
+self-energy inserted, and the core it dresses, are themselves irreducible. That leaves
+30380 of the 35208 — 3, 9, 47, 313, 2662, 27346 at L = 1…6.
 
-**β only** and **γ only** restrict the list to the structures contributing to the beta
-function or to the anomalous dimension; **all** puts them back. The page opens on the
-one-loop beta structure, V1.1.
+The cubic theory has no undressed one-vertex-reducible vertex structures at all, and no
+factorisable cores, so what the filter removes here is exactly the 3772 leg-dressed
+structures carrying a chain of insertions on a leg, plus the 1056 propagator chains.
+
+Every expression in the details pane can be copied as LaTeX: hover it and a **TeX**
+button appears, putting the formula on the clipboard in standard syntax
+(`\frac`, `\varepsilon`, `\zeta_{5,3}`, `\lambda_{ikab}`, `f^{(6)}_{2,9}`), ready to
+paste into a paper.
 
 The graph drawings are editable: drag a vertex to place it (it stays pinned), drag a
 handle to curve a line, and the layout you arrive at is kept in the browser per
@@ -68,14 +72,15 @@ one document:
 | --- | --- |
 | `note`, `source` | conventions, provenance, licence |
 | `loops`, `counts` | 1…6, and the structure counts per loop order |
-| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `On`, `tensor`, `graph`, `onepi`, `vr`, `comp` |
+| `structures` | one record each: `id`, `L`, `kind`, `num`, `edges`, `ext`, `stab`, `orbit`, `On`, `tensor`, `graph`, `onepi`, `vr`, `fac`, `comp` |
 | `beta`, `beta_z`, `Z_lambda` | vertex-structure expressions, keyed by structure id |
 | `Zphi_minus_half`, `gamma_phi`, `gamma_phi_On` | propagator-structure expressions, keyed by structure id |
 
 Expressions are sympy-readable strings in `n` and `epsilon`; `id` is unique across loop
-orders and is the registry number the atlas displays. `vr` is the one-vertex-reducible
-flag the "non-factorisable only" filter uses, so the same cut can be made on the data:
-`[s for s in d['structures'] if not s['vr']]`. The file is written compact rather than
+orders and is the registry number the atlas displays. Two reducibility flags travel with each structure:
+`vr` is the raw topology (the internal graph has a cut vertex), and `fac` is what the
+"non-factorisable only" filter hides, so the same cut can be made on the data:
+`[s for s in d['structures'] if not s['fac']]`. The file is written compact rather than
 indented — at this size indenting would add 22 MB — but it parses identically.
 
 Every expression agrees with the project's `renorm3_L1…L6.json`: 30979 `beta`, 30979
